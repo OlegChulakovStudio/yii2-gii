@@ -232,6 +232,16 @@ class Generator extends \yii\gii\generators\model\Generator
                     'mapperClassName' => $mapperClassName,
                 ])
             );
+
+            $translate = new CodeFile(
+                $this->fullModulePath . '/messages/ru/translate.php',
+                $this->render('translate.php', [
+                    'className' => $modelClassName,
+                ])
+            );
+            if ($translate->operation == CodeFile::OP_CREATE) {
+                $files[] = $translate;
+            }
         }
 
         return $files;

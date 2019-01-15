@@ -25,7 +25,7 @@ echo "<?php\n";
 
 use yii\helpers\Url;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Create ' . Inflector::camel2words($generator->modelClass, false)); ?>);
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Create ' . Inflector::pluralize(Inflector::camel2words($generator->modelClass, false))); ?>);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words($generator->modelClass))); ?>), 'url' => ['index']];
 ?>
 <div class="box box-success">

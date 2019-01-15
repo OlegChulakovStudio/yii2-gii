@@ -26,7 +26,7 @@ echo "<?php\n";
 use yii\helpers\Url;
 use yii\helpers\Html;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Update ' . Inflector::camel2words($generator->modelClass, false)); ?>);
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Update ' . Inflector::pluralize(Inflector::camel2words($generator->modelClass, false))); ?>);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words($generator->modelClass))); ?>), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model-><?= $generator->getNameAttribute(); ?>, 'url' => ['view', <?= $generator->generateUrlParams(); ?>]];
 ?>
