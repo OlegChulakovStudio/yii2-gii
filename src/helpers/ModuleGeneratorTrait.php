@@ -8,6 +8,8 @@
 
 namespace chulakov\gii\helpers;
 
+use chulakov\components\models\ActiveRecord;
+
 /**
  * Module preset trait
  *
@@ -25,6 +27,16 @@ trait ModuleGeneratorTrait
      * @var string Relation path to modules location
      */
     public $modulePath = 'common/modules';
+
+    /**
+     * Получение имени модели
+     *
+     * @return string|ActiveRecord
+     */
+    public function getFullModelClass()
+    {
+        return $this->moduleNamespace . '\\models\\' . $this->modelClass;
+    }
 
     /**
      * Получение полного имени модуля

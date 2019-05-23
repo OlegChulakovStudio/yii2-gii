@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
 use yii\gii\CodeFile;
 use chulakov\gii\helpers\ModuleGeneratorTrait;
 use yii\helpers\Inflector;
+use yii\helpers\VarDumper;
 
 /**
  * Generates CRUD
@@ -201,7 +202,7 @@ class Generator extends \yii\gii\generators\crud\Generator
     public function generateUrlParams()
     {
         /* @var $class ActiveRecord */
-        $class = $this->moduleNamespace . '\\models\\' . $this->modelClass;
+        $class = $this->getFullModelClass();
         $pks = $class::primaryKey();
         if (count($pks) === 1) {
             if (is_subclass_of($class, 'yii\mongodb\ActiveRecord')) {
@@ -229,7 +230,7 @@ class Generator extends \yii\gii\generators\crud\Generator
     public function getColumnNames()
     {
         /* @var $class ActiveRecord */
-        $class = $this->moduleNamespace . '\\models\\' . $this->modelClass;
+        $class = $this->getFullModelClass();
         if (is_subclass_of($class, 'yii\db\ActiveRecord')) {
             return $class::getTableSchema()->getColumnNames();
         }
@@ -247,7 +248,7 @@ class Generator extends \yii\gii\generators\crud\Generator
     public function getTableSchema()
     {
         /* @var $class ActiveRecord */
-        $class = $this->moduleNamespace . '\\models\\' . $this->modelClass;
+        $class = $this->getFullModelClass();
         if (is_subclass_of($class, 'yii\db\ActiveRecord')) {
             return $class::getTableSchema();
         } else {
@@ -311,7 +312,7 @@ class Generator extends \yii\gii\generators\crud\Generator
     public function generateActiveSearchField($attribute, $margin = "\n")
     {
         if ($attribute == 'is_active') {
-            return "->dropDownList([{$margin}    '' => 'Любой статус автивности',{$margin}    '0' => 'Только не активные',{$margin}    '1' => 'Только активные',{$margin}])";
+            return "->dropDownList([{$margin}    '' => 'Любой статус активности',{$margin}    '0' => 'Только не активные',{$margin}    '1' => 'Только активные',{$margin}])";
         }
         $tableSchema = $this->getTableSchema();
         if ($tableSchema === false) {
@@ -374,5 +375,22 @@ class Generator extends \yii\gii\generators\crud\Generator
             return $this->searchModelClass;
         }
         return $modelClassName . 'Search';
+    }
+
+    /**
+     * @return string
+     */
+    public function getNameAttribute()
+    {
+        foreach ($this->getColumnNames() as $name) {
+            if (!strcasecmp($name, 'name') || !strcasecmp($name, 'title')) {
+                return $name;
+            }
+        }
+        /* @var $class \yii\db\ActiveRecord */
+        $class = $this->getFullModelClass();
+        $pk = $class::primaryKey();
+
+        return $pk[0];
     }
 }
