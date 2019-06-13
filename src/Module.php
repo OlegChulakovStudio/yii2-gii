@@ -40,6 +40,14 @@ class Module extends \yii\gii\Module
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getControllerPath()
+    {
+        return \Yii::getAlias('@vendor/chulakov/yii2-gii/src/console');
+    }
+
+    /**
      * Возвращает список допустимых генераторов кода
      *
      * @return array
