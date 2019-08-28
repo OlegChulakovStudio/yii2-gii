@@ -13,6 +13,7 @@ use yii\db\ActiveRecord;
 use yii\gii\CodeFile;
 use yii\helpers\Inflector;
 use yii\base\NotSupportedException;
+use common\components\FileRemoveBehavior;
 use chulakov\gii\helpers\ModuleGeneratorTrait;
 
 /**
@@ -31,6 +32,7 @@ class Generator extends \yii\gii\generators\model\Generator
     public $useSchemaName = true;
     public $generateQuery = true;
     public $enableI18N = false;
+    public $imageProperties = false;
 
     /**
      * {@inheritdoc}
@@ -57,7 +59,7 @@ class Generator extends \yii\gii\generators\model\Generator
             [['template'], 'required', 'message' => 'A code template must be selected.'],
             [['template'], 'validateTemplate'],
 
-            [['db', 'tableName', 'modelClass', 'baseClass', 'moduleID', 'modulePath'], 'filter', 'filter' => 'trim'],
+            [['db', 'tableName', 'modelClass', 'baseClass', 'moduleID', 'modulePath', 'imageProperties'], 'filter', 'filter' => 'trim'],
             [['db', 'tableName', 'baseClass', 'moduleID', 'modulePath'], 'required'],
 
             [['moduleID'], 'match', 'pattern' => '/^[\w\\-]+$/', 'message' => 'Only word characters and dashes are allowed.'],
@@ -121,12 +123,15 @@ class Generator extends \yii\gii\generators\model\Generator
 
     /**
      * {@inheritdoc}
+     * @throws \Exception
      */
     public function generate()
     {
         $files = [];
         $relations = $this->generateRelations();
         $db = $this->getDbConnection();
+        $this->imageProperties = $this->imageProperties();
+
         foreach ($this->getTableNames() as $tableName) {
             // components classes :
             $modelClassName = $this->generateClassName($tableName);
@@ -171,6 +176,7 @@ class Generator extends \yii\gii\generators\model\Generator
                 $this->render('mapper.php', [
                     'className' => $mapperClassName,
                     'modelClassName' => $modelClassName,
+                    'properties' => $properties,
                     'fields' => $this->generateFillAttributes($tableSchema),
                     'labels' => $this->generateLabels($tableSchema),
                     'rules' => $this->generateRules($tableSchema),
@@ -182,6 +188,7 @@ class Generator extends \yii\gii\generators\model\Generator
                 $this->fullModulePath . '/models/forms/' . $formClassName . '.php',
                 $this->render('form.php', [
                     'className' => $formClassName,
+                    'modelClassName' => $modelClassName,
                     'properties' => $this->filtrateProperties($properties),
                 ])
             );
@@ -269,7 +276,35 @@ class Generator extends \yii\gii\generators\model\Generator
                 'comment' => $column->comment,
             ];
         }
+
+        if ($imageProperties = $this->imageProperties) {
+            /** @var array $imageProperties */
+            foreach ($imageProperties as $property) {
+                $properties[$property] = [
+                    'name' => $property,
+                    'type' => 'Image',
+                ];
+            }
+        }
+
         return $properties;
+    }
+
+    /**
+     *  Generates the image properties for the model.
+     *
+     * @return array|null
+     * @throws \Exception
+     */
+    protected function imageProperties()
+    {
+        if ($this->imageProperties) {
+            if ($imageProperties = array_filter(explode(',', $this->imageProperties))) {
+                $this->imageProperties = $imageProperties;
+                return $this->imageProperties;
+            }
+        }
+        throw new \Exception("Failed to initialize parameter: --imageProperties={$this->imageProperties}");
     }
 
     /**
@@ -295,6 +330,17 @@ class Generator extends \yii\gii\generators\model\Generator
                 ];
             }
         }
+
+        if ($this->imageProperties) {
+            $behaviors[] = [
+                'namespace' => 'chulakov\components\behaviors',
+                'class' => 'FileRemoveBehavior',
+                'options' => [
+                    'attributes' => $this->imageProperties,
+                ],
+            ];
+        }
+
         return $behaviors;
     }
 
