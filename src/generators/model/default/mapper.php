@@ -12,6 +12,7 @@
  */
 
 use chulakov\gii\helpers\ModuleHelper;
+use chulakov\gii\helpers\TranslationsHelper;
 
 echo ModuleHelper::copyright('Файл класса ' . $className);
 ?>
@@ -20,6 +21,10 @@ namespace <?= $generator->moduleNamespace; ?>\models\mappers;
 use Yii;
 use chulakov\components\base\SingletonTrait;
 use chulakov\components\models\mappers\Mapper;
+<?php if ($generator->imageProperties): ?>
+use chulakov\filestorage\validators\FileValidator;
+use common\models\enums\File;
+<?php endif; ?>
 use chulakov\components\models\mappers\types\NullType;
 use chulakov\components\models\mappers\types\ModelType;
 use <?= $generator->moduleNamespace; ?>\models\<?= $modelClassName; ?>;
@@ -55,6 +60,23 @@ class <?= $className; ?> extends Mapper
         return [<?= empty($rules) ? '' : ("\n            " . implode(",\n            ", $rules) . ",\n        "); ?>];
     }
 
+<?php if ($generator->imageProperties): ?>
+    /**
+     * @inheritdoc
+     */
+    public function initFormRules()
+    {
+        return [
+            [<?= str_replace(["\n", "\t", ' '], '', yii\helpers\VarDumper::export($generator->imageProperties)); ?>, 'file', 'maxSize' => File::MAX_SIZE],
+<?php foreach ($properties as $property): ?>
+<?php if ($property['type'] == 'Image'): ?>
+            [['<?= $property['name']; ?>'], FileValidator::class, 'strict' => true, 'targetAttribute' => '<?= $property['name']; ?>Attached'],
+<?php endif; ?>
+<?php endforeach; ?>
+        ];
+    }
+<?php endif; ?>
+
     /**
      * @inheritdoc
      */
@@ -62,8 +84,24 @@ class <?= $className; ?> extends Mapper
     {
         return [
 <?php foreach ($labels as $name => $label): ?>
-            <?= "'$name' => Yii::t('ch/{$generator->moduleID}', " . $generator->generateString($label) . "),\n" ?>
+            '<?= $name; ?>' => Yii::t('<?= TranslationsHelper::getTranslatePath($label, $generator->moduleID); ?>', <?= $generator->generateString($label); ?>),
 <?php endforeach; ?>
         ];
     }
+
+<?php if ($generator->imageProperties): ?>
+    /**
+     * @inheritDoc
+     */
+    public function initFormLabels()
+    {
+        return array_merge(parent::initFormLabels(), [
+<?php foreach ($properties as $property): ?>
+<?php if ($property['type'] == 'Image'): ?>
+            '<?= $property['name']; ?>' => Yii::t('<?= TranslationsHelper::getTranslatePath($label, $generator->moduleID); ?>', '<?= TranslationsHelper::formatTitle($property['name']); ?>'),
+<?php endif; ?>
+<?php endforeach; ?>
+        ]);
+    }
+<?php endif; ?>
 }

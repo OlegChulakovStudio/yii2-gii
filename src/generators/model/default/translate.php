@@ -10,7 +10,7 @@
 use yii\helpers\Inflector;
 
 $upName = Inflector::pluralize(Inflector::camel2words($className));
-$downName = Inflector::pluralize(Inflector::camel2words($className, false));
+$downName = strtolower(Inflector::pluralize(Inflector::camel2words($className, false)));
 
 echo "<?php\n";
 ?>
