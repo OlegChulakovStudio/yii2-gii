@@ -29,6 +29,7 @@ class Generator extends \yii\gii\generators\crud\Generator
     public $viewPath;
     public $enablePjax = false;
     public $enableI18N = false;
+    public $imageProperties = false;
 
     /**
      * {@inheritdoc}
@@ -56,7 +57,7 @@ class Generator extends \yii\gii\generators\crud\Generator
             [['template'], 'required', 'message' => 'A code template must be selected.'],
             [['template'], 'validateTemplate'],
 
-            [['controllerClass', 'modelClass', 'searchModelClass', 'moduleID', 'modulePath'], 'filter', 'filter' => 'trim'],
+            [['controllerClass', 'modelClass', 'searchModelClass', 'moduleID', 'modulePath', 'imageProperties'], 'filter', 'filter' => 'trim'],
             [['modelClass', 'controllerClass', 'moduleID', 'modulePath'], 'required'],
 
 
@@ -360,7 +361,36 @@ class Generator extends \yii\gii\generators\crud\Generator
                 ];
             }
         }
+        foreach ($this->imageProperties() as $imageProperty) {
+            $properties[$imageProperty] = [
+                'name' => $imageProperty,
+                'type' => 'Image',
+            ];
+        }
         return $properties;
+    }
+
+    /**
+     * Generate image properties.
+     *
+     * @return array|null
+     */
+    protected function imageProperties()
+    {
+        return $this->imageProperties 
+            ? array_filter(explode(',', $this->imageProperties)) 
+            : null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function generateColumnFormat($column)
+    {
+        if (stripos($column->name, 'color') !== false && $column->phpType === 'string') {
+            return 'color';
+        }
+        return parent::generateColumnFormat($column);
     }
 
     /**
