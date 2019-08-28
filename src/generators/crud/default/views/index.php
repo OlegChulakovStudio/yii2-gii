@@ -10,6 +10,7 @@
  */
 
 use yii\helpers\Inflector;
+use \chulakov\gii\helpers\TranslationsHelper;
 
 echo "<?php\n";
 ?>
@@ -27,10 +28,12 @@ echo "<?php\n";
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\grid\GridView;
+use chulakov\gii\helpers\ColorPreview;
+use chulakov\components\widgets\PageSizeWidget;
 <?= $generator->enablePjax ? "use yii\widgets\Pjax;\n" : ''; ?>
 use <?= $generator->moduleNamespace; ?>\models\<?= $generator->modelClass; ?>;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words($generator->modelClass))); ?>);
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?=$generator->generateString(TranslationsHelper::formatTitle(Inflector::pluralize(Inflector::camel2words($generator->modelClass))))?>);
 
 ?>
 
@@ -49,6 +52,7 @@ $this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generat
 <?= $generator->enablePjax ? "                <?php Pjax::begin(); ?>\n" : ''; ?>
                 <?= "<?php"; ?> $grid = GridView::begin([
                     'dataProvider' => $dataProvider,
+                    'filterSelector' => 'select[name="per-page"]',
                     'columns' => [
                         ['class' => 'yii\grid\SerialColumn'],
 
@@ -72,9 +76,31 @@ if ($property['type'] == 'datetime' || in_array($property['name'], ['created_at'
                             'format' => ['date', 'php:d.m.Y H:i'],
                         ],
 <?php continue; endif;
+if ($property['type'] === 'color'): ?>
+                        [
+                            'attribute' => '<?= $property['name']; ?>',
+                            'format' => 'raw',
+                            'contentOptions' => ['class' => 'text-center'],
+                            'value' => function (<?= $generator->modelClass; ?> $model) {
+                                return ColorPreview::display($model-><?=$property['name'];?>);
+                            }
+                        ],
+<?php continue; endif; ?>
+<?php if ($property['type'] === 'Image'): ?>
+                        [
+                            'attribute' => '<?= $property['name']; ?>',
+                            'format' => 'raw',
+                            'contentOptions' => ['class' => 'text-center'],
+                            'value' => function (<?= $generator->modelClass; ?> $model) {
+                                $img =  Html::img($model->image->getUrl(), ['style' => 'max-width: 27px;']);
+                                return Html::a($img, $model-><?= $property['name']; ?>->getUrl(), [
+                                    'target' => '_blank',
+                                ]);
+                            },
+                        ],
+<?php continue; endif;
 echo "                        '" . $property['name'] . ($property['type'] === 'text' ? "" : ":" . $property['type']) . "',\n";
-endforeach;
-?>
+endforeach; ?>
 <?php if (isset($properties['sort'])) : ?>
                         [
                             'class' => 'chulakov\components\widgets\ActionColumn',
@@ -102,6 +128,9 @@ endforeach;
                         </a>
                     </div>
                     <div class="col-md-6 text-right">
+                        <?= "<?="; ?> PageSizeWidget::widget([
+                            'defaultPageSize' => $grid->dataProvider->getPagination()->defaultPageSize
+                        ]); ?>
                         <?= "<?="; ?> $grid->renderPager(); ?>
                     </div>
                 </div>
