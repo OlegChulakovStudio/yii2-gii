@@ -9,6 +9,7 @@
  * @var $properties array
  */
 
+use chulakov\gii\helpers\TranslationsHelper;
 use yii\helpers\Inflector;
 
 echo "<?php\n";
@@ -25,12 +26,12 @@ echo "<?php\n";
 
 use yii\helpers\Url;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Create ' . Inflector::pluralize(Inflector::camel2words($generator->modelClass, false))); ?>);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words($generator->modelClass))); ?>), 'url' => ['index']];
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Create ' . strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass, false)))); ?>);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(TranslationsHelper::formatTitle(Inflector::pluralize(Inflector::camel2words($generator->modelClass)))); ?>), 'url' => ['index']];
 ?>
 <div class="box box-success">
     <div class="box-header with-border">
-        <h3 class="box-title"><?= "<?="; ?> Yii::t('ch/<?= $generator->moduleID; ?>', '<?= Inflector::camel2words($generator->modelClass); ?> form'); ?></h3>
+        <h3 class="box-title"><?= "<?="; ?> Yii::t('ch/<?= $generator->moduleID; ?>', '<?= ucfirst(strtolower(Inflector::camel2words($generator->modelClass))); ?> form'); ?></h3>
         <div class="box-tools pull-right">
             <button type="button" class="btn btn-box-tool" data-widget="collapse">
                 <i class="fa fa-minus"></i>

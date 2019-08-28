@@ -27,8 +27,8 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', 'View <?= Inflector::pluralize(Inflector::camel2words($generator->modelClass, false)); ?>');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words($generator->modelClass))); ?>), 'url' => ['index']];
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', 'View <?= strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass, false))); ?>');
+$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(ucfirst(strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass))))); ?>), 'url' => ['index']];
 ?>
 <div class="box box-success">
     <div class="box-header with-border">
