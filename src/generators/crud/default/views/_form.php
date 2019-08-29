@@ -23,11 +23,8 @@ echo "<?php\n";
  */
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
 
 ?>
-
-<?= "<?php"; ?> $form = ActiveForm::begin(); ?>
 
 <?= "<?="; ?> $form->errorSummary($model, [
     'class' => 'alert alert-error'
@@ -44,5 +41,3 @@ use yii\widgets\ActiveForm;
     </div>
 </div>
 <?php endforeach; ?>
-
-<?= "<?php " ?>ActiveForm::end(); ?>
