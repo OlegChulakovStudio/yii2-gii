@@ -28,7 +28,8 @@ echo "<?php\n";
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\grid\GridView;
-use chulakov\gii\helpers\ColorPreview;
+use chulakov\gii\widgets\ColorColumn;
+use chulakov\gii\widgets\ImageColumn;
 use chulakov\components\widgets\PageSizeWidget;
 <?= $generator->enablePjax ? "use yii\widgets\Pjax;\n" : ''; ?>
 use <?= $generator->moduleNamespace; ?>\models\<?= $generator->modelClass; ?>;
@@ -78,25 +79,14 @@ if ($property['type'] == 'datetime' || in_array($property['name'], ['created_at'
 <?php continue; endif;
 if ($property['type'] === 'color'): ?>
                         [
-                            'attribute' => '<?= $property['name']; ?>',
-                            'format' => 'raw',
-                            'contentOptions' => ['class' => 'text-center'],
-                            'value' => function (<?= $generator->modelClass; ?> $model) {
-                                return ColorPreview::display($model-><?=$property['name'];?>);
-                            }
+                             'class' => ColorColumn::class,
+                             'attribute' => '<?= $property['name']; ?>',
                         ],
 <?php continue; endif; ?>
 <?php if ($property['type'] === 'Image'): ?>
                         [
+                            'class' => ImageColumn::class,
                             'attribute' => '<?= $property['name']; ?>',
-                            'format' => 'raw',
-                            'contentOptions' => ['class' => 'text-center'],
-                            'value' => function (<?= $generator->modelClass; ?> $model) {
-                                $img =  Html::img($model->image->getUrl(), ['style' => 'max-width: 27px;']);
-                                return Html::a($img, $model-><?= $property['name']; ?>->getUrl(), [
-                                    'target' => '_blank',
-                                ]);
-                            },
                         ],
 <?php continue; endif;
 echo "                        '" . $property['name'] . ($property['type'] === 'text' ? "" : ":" . $property['type']) . "',\n";
