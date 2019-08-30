@@ -14,7 +14,7 @@ echo ModuleHelper::copyright('Файл класса ' . $className);
 ?>
 namespace <?= $generator->moduleNamespace; ?>\models\forms;
 
-use chulakov\components\models\forms\Form;
+use chulakov\model\models\forms\Form;
 
 class <?= $className; ?> extends Form
 {

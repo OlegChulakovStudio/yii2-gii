@@ -8,7 +8,7 @@
 
 namespace chulakov\gii\helpers;
 
-use chulakov\components\models\ActiveRecord;
+use chulakov\model\models\ActiveRecord;
 
 /**
  * Module preset trait

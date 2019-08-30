@@ -59,7 +59,7 @@ if ($property['name'] == 'sort') {
 }
 if ($property['name'] == 'is_active') : ?>
                         [
-                            'class' => 'chulakov\components\widgets\ToggleColumn',
+                            'class' => 'chulakov\view\grid\ToggleColumn',
                             'attribute' => '<?= $property['name']; ?>',
                             'value' => function (<?= $generator->modelClass; ?> $model) {
                                 return ['active', 'id' => $model->id];
@@ -77,12 +77,12 @@ endforeach;
 ?>
 <?php if (isset($properties['sort'])) : ?>
                         [
-                            'class' => 'chulakov\components\widgets\ActionColumn',
+                            'class' => 'chulakov\view\grid\ActionColumn',
                             'template' => '{up} {down} {view} {update} {delete}',
                         ],
 <?php else: ?>
                         [
-                            'class' => 'chulakov\components\widgets\ActionColumn',
+                            'class' => 'chulakov\view\grid\ActionColumn',
                         ],
 <?php endif; ?>
                     ],

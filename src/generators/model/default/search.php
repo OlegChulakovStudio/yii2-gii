@@ -20,7 +20,7 @@ namespace <?= $generator->moduleNamespace; ?>\models\search;
 
 use Yii;
 use yii\db\ActiveQuery;
-use chulakov\components\models\search\SearchForm;
+use chulakov\model\models\search\SearchForm;
 use <?= $generator->moduleNamespace; ?>\models\<?= $modelClassName; ?>;
 
 class <?= $className; ?> extends SearchForm
