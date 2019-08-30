@@ -32,12 +32,14 @@ class ImageColumn extends DataColumn
     public function renderDataCellContent($model, $key, $index)
     {
         if ($this->content === null) {
-            $url = $model->{$this->attribute}->getUrl();
-            $img = Html::img($url, ['style' => 'max-height: 27px;']);
+            if ($attribute = $model->{$this->attribute}) {
+                $url = $attribute->getUrl();
+                $img = Html::img($url, ['style' => 'max-height: 27px;']);
 
-            return Html::a($img, $url, [
-                'target' => '_blank',
-            ]);
+                return Html::a($img, $url, [
+                    'target' => '_blank',
+                ]);
+            }
         }
         return parent::renderDataCellContent($model, $key, $index);
     }
