@@ -53,8 +53,8 @@ class <?= $className; ?> extends ActiveRecord
     const IMAGE_GROUP_<?= mb_strtoupper($property['name']); ?> = '<?= mb_strtolower($property['name']); ?>';
 <?php endif; ?>
 <?php endforeach;?>
-<?php endif; ?>
 
+<?php endif; ?>
     /**
      * @inheritdoc
      */
@@ -105,11 +105,10 @@ class <?= $className; ?> extends ActiveRecord
             ->andOnCondition(['group_code' => self::IMAGE_GROUP])
             ->andOnCondition(['object_type' => self::IMAGE_GROUP_<?= mb_strtoupper($property['name']); ?>]);
     }
+
 <?php endif; ?>
 <?php endforeach;?>
-
 <?php foreach ($relations as $name => $relation) : ?>
-
     /**
      * @return ActiveQuery
      */
@@ -118,7 +117,7 @@ class <?= $className; ?> extends ActiveRecord
         <?= $relation[0] . "\n"; ?>
     }
 <?php endforeach; ?>
-
+<?php $generator->imageProperties ? PHP_EOL : ''; ?>
     /**
      * @return <?= $queryClassName . "\n"; ?>
      */
