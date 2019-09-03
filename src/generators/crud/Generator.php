@@ -9,11 +9,11 @@
 namespace chulakov\gii\generators\crud;
 
 use Yii;
-use yii\db\ActiveRecord;
 use yii\gii\CodeFile;
-use chulakov\gii\helpers\ModuleGeneratorTrait;
+use yii\db\ActiveRecord;
 use yii\helpers\Inflector;
 use yii\helpers\VarDumper;
+use chulakov\gii\helpers\ModuleGeneratorTrait;
 
 /**
  * Generates CRUD
@@ -21,6 +21,9 @@ use yii\helpers\VarDumper;
 class Generator extends \yii\gii\generators\crud\Generator
 {
     use ModuleGeneratorTrait;
+
+    const IMAGE_TYPE_KEY = 'Image';
+    const COLOR_TYPE_KEY = 'color';
 
     public $modelClass;
     public $controllerClass = 'DefaultController';
@@ -387,10 +390,35 @@ class Generator extends \yii\gii\generators\crud\Generator
      */
     public function generateColumnFormat($column)
     {
-        if (stripos($column->name, 'color') !== false && $column->phpType === 'string') {
+        if ($this->isColorProperty($column)) {
             return 'color';
         }
         return parent::generateColumnFormat($column);
+    }
+
+    /**
+     * Returns true, if the property is a color property
+     * 
+     * @param \yii\db\ColumnSchema $column
+     * @return bool
+     */
+    public function isColorProperty($column)
+    {
+        if (stripos($column->name, self::COLOR_TYPE_KEY) !== false && $column->phpType === 'string') {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Returns true, if the property is a Image property
+     *
+     * @param \yii\db\ColumnSchema $column
+     * @return bool
+     */
+    public function isImageProperty($column)
+    {
+        return $column['type'] == self::IMAGE_TYPE_KEY ? true : false;
     }
 
     /**
