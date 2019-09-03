@@ -9,8 +9,8 @@
  * @var $properties array
  */
 
-use chulakov\gii\helpers\TranslationsHelper;
 use yii\helpers\Inflector;
+use chulakov\gii\helpers\TranslationsHelper;
 
 echo "<?php\n";
 ?>
@@ -26,7 +26,6 @@ echo "<?php\n";
 
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
-use chulakov\components\widgets\BoxWidget;
 
 $this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Create ' . strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass, false)))); ?>);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(TranslationsHelper::formatTitle(Inflector::pluralize(Inflector::camel2words($generator->modelClass)))); ?>), 'url' => ['index']];
@@ -34,10 +33,22 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID
 ?>
 
 <?= '<?php'; ?> $form = ActiveForm::begin(); ?>
-    <?= '<?='; ?> BoxWidget::begin(['title' => Yii::t('ch/<?= $generator->moduleID; ?>', '<?= ucfirst(strtolower(Inflector::camel2words($generator->modelClass))); ?> form')]); ?>
+    <div class="form">
+        <h3 class="form-title"><?= '<?='; ?> Yii::t('ch/<?= $generator->moduleID; ?>', '<?= ucfirst(strtolower(Inflector::camel2words($generator->modelClass))); ?> form'); ?></h3>
         <?= '<?='; ?> $this->render('_form', [
             'form' => $form,
             'model' => $model,
         ]); ?>
-    <?= '<?='; ?> BoxWidget::end(); ?>
+        <div class="footer">
+            <button type="submit" class="btn btn-success">
+                <i class="fa fa-save"></i> <?= '<?='; ?> Yii::t('ch/all', 'Create'); ?>
+            </button>
+            <button type="submit" name="refresh" value="1" class="btn btn-success">
+                <i class="fa fa-save"></i> <?= '<?='; ?> Yii::t('ch/all', 'Create and continue'); ?>
+            </button>
+            <a class="btn btn-danger" href="<?= '<?='; ?> Url::to(['index']); ?>">
+                <i class="fa fa-ban"></i> <?= '<?='; ?> Yii::t('ch/all', 'Cancel'); ?>
+            </a>
+        </div>
+    </div>
 <?= '<?php'; ?> ActiveForm::end(); ?>

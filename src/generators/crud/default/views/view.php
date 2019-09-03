@@ -29,49 +29,50 @@ use yii\widgets\DetailView;
 
 $this->title = Yii::t('ch/<?= $generator->moduleID; ?>', 'View <?= strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass, false))); ?>');
 $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(ucfirst(strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass))))); ?>), 'url' => ['index']];
-?>
-<div class="box box-success">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= "<?="; ?> Html::encode($model-><?= $generator->getNameAttribute() ?>); ?></h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-            </button>
-        </div>
-    </div>
 
-    <div class="box-body">
-
-        <?= "<?="; ?> DetailView::widget([
-            'model' => $model,
-            'attributes' => [
-<?php
-if (($tableSchema = $generator->getTableSchema()) === false) {
-    foreach ($generator->getColumnNames() as $name) {
-        echo "                '" . $name . "',\n";
-    }
-} else {
-    foreach ($generator->getTableSchema()->columns as $column) {
-        $format = $generator->generateColumnFormat($column);
-        echo "                '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-    }
-}
 ?>
+
+<div class="view">
+    <h3 class="view-title"><?= "<?="; ?> Html::encode($model-><?= $generator->getNameAttribute() ?>); ?></h3>
+    <?= "<?="; ?> DetailView::widget([
+        'model' => $model,
+        'attributes' => [
+<?php if (($tableSchema = $generator->getTableSchema()) === false): ?>
+<?php foreach ($generator->getColumnNames() as $name): ?>
+            '<?= $name; ?>',
+<?php endforeach; ?>
+<?php else: ?>
+<?php foreach ($generator->getTableSchema()->columns as $column): ?>
+<?php if ($generator->isColorProperty($column)): ?>
+            [
+                'attribute' => '<?= $column->name; ?>',
+                'format' => 'raw',
+                'value' => \chulakov\view\grid\ColorColumn::render($model, '<?= $column->name; ?>'),
             ],
-        ]); ?>
-
-    </div>
-
-    <div class="box-footer">
-        <div class="row">
-            <div class="col-md-12">
-                <a class="btn btn-warning" href="<?= "<?="; ?> Url::to(['update', <?= $generator->generateUrlParams(); ?>]); ?>">
-                    <i class="fa fa-pencil"></i> <?= "<?="; ?> Yii::t('yii', 'Update'); ?>
-                </a>
-                <a class="btn btn-default" href="<?= "<?="; ?> Url::to(['index']); ?>">
-                    <i class="fa fa-arrow-left"></i> <?= "<?="; ?> Yii::t('ch/all', 'Back'); ?>
-                </a>
-            </div>
-        </div>
+<?php continue; endif; ?>
+<?php $format = $generator->generateColumnFormat($column); ?>
+            '<?= $column->name . ($format === 'text' ? "" : ":" . $format); ?>',
+<?php endforeach; ?>
+<?php endif; ?>
+<?php if ($properties): ?>
+<?php foreach ($properties as $property): ?>
+<?php if ($generator->isImageProperty($property)): ?>
+            [
+                'attribute' => '<?= $property['name']; ?>',
+                'format' => 'raw',
+                'value' => \chulakov\view\grid\ImageColumn::render($model, '<?= $property['name']; ?>'),
+            ],
+<?php endif; ?>
+<?php endforeach; ?>
+<?php endif; ?>
+        ],
+    ]); ?>
+    <div class="footer">
+        <a class="btn btn-warning" href="<?= "<?="; ?> Url::to(['update', <?= $generator->generateUrlParams(); ?>]); ?>">
+            <i class="fa fa-pencil"></i> <?= "<?="; ?> Yii::t('yii', 'Update'); ?>
+        </a>
+        <a class="btn btn-default" href="<?= "<?="; ?> Url::to(['index']); ?>">
+            <i class="fa fa-arrow-left"></i> <?= "<?="; ?> Yii::t('ch/all', 'Back'); ?>
+        </a>
     </div>
 </div>
