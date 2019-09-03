@@ -9,8 +9,8 @@
 namespace chulakov\gii\generators\model;
 
 use yii\db\Schema;
-use yii\db\ActiveRecord;
 use yii\gii\CodeFile;
+use yii\db\ActiveRecord;
 use yii\helpers\Inflector;
 use yii\base\NotSupportedException;
 use common\components\FileRemoveBehavior;
@@ -303,8 +303,9 @@ class Generator extends \yii\gii\generators\model\Generator
                 $this->imageProperties = $imageProperties;
                 return $this->imageProperties;
             }
+            throw new \Exception("Failed to initialize parameter: --imageProperties={$this->imageProperties}");
         }
-        throw new \Exception("Failed to initialize parameter: --imageProperties={$this->imageProperties}");
+        return null;
     }
 
     /**
