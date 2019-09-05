@@ -39,75 +39,79 @@ $this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?=$generator->generate
 
 <?= "<?="; ?> $this->render('_search', ['model' => $searchModel]); ?>
 
-<div class="grid">
-    <h3 class="grid-title"><?= "<?="; ?> Yii::t('ch/all', 'List'); ?></h3>
+<div class="box box-solid">
+
+    <div class="box-header with-border">
+        <h3 class="box-title"><?= "<?="; ?> Yii::t('ch/all', 'List'); ?></h3>
+    </div>
+
+    <div class="box-body">
+
 <?= $generator->enablePjax ? "    <?php Pjax::begin(); ?>\n" : ''; ?>
-    <?= "<?php"; ?> $grid = GridView::begin([
-        'dataProvider' => $dataProvider,
-        'filterSelector' => 'select[name="per-page"]',
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-<?php foreach ($properties as $property) : if ($property['name'] == 'sort') {continue;} ?>
+        <?= "<?php"; ?> $grid = GridView::begin([
+            'dataProvider' => $dataProvider,
+            'filterSelector' => 'select[name="per-page"]',
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+<?php foreach ($properties as $property) : if ($property['name'] == 'sort') { continue; } ?>
 <?php if ($property['name'] == 'is_active'): ?>
-            [
-                'class' => 'chulakov\components\widgets\ToggleColumn',
-                'attribute' => '<?= $property['name']; ?>',
-                'value' => function (<?= $generator->modelClass; ?> $model) {
-                    return ['active', 'id' => $model->id];
-                }
-            ],
+                [
+                    'class' => 'chulakov\components\widgets\ToggleColumn',
+                    'attribute' => '<?= $property['name']; ?>',
+                    'value' => function (<?= $generator->modelClass; ?> $model) {
+                        return ['active', 'id' => $model->id];
+                    }
+                ],
 <?php continue; endif; ?>
 <?php if ($property['type'] == 'datetime' || in_array($property['name'], ['created_at', 'published_at'])) : ?>
-            [
-                'attribute' => '<?= $property['name']; ?>',
-                'format' => ['date', 'php:d.m.Y H:i'],
-            ],
+                [
+                    'attribute' => '<?= $property['name']; ?>',
+                    'format' => ['date', 'php:d.m.Y H:i'],
+                ],
 <?php continue; endif; ?>
 <?php if ($property['type'] === 'color'): ?>
-            [
-                'class' => \chulakov\view\grid\ColorColumn::class,
-                'attribute' => '<?= $property['name']; ?>',
-            ],
+                [
+                    'class' => \chulakov\view\grid\ColorColumn::class,
+                    'attribute' => '<?= $property['name']; ?>',
+                ],
 <?php continue; endif; ?>
 <?php if ($property['type'] === 'Image'): ?>
-            [
-                'class' => \chulakov\view\grid\ImageColumn::class,
-                'attribute' => '<?= $property['name']; ?>',
-            ],
+                [
+                    'class' => \chulakov\view\grid\ImageColumn::class,
+                    'attribute' => '<?= $property['name']; ?>',
+                ],
 <?php continue; endif; ?>
-            '<?= $property['name'] . ($property['type'] === 'text' ? "" : ":" . $property['type']); ?>',
+                '<?= $property['name'] . ($property['type'] === 'text' ? "" : ":" . $property['type']); ?>',
 <?php endforeach; ?>
 <?php if (isset($properties['sort'])) : ?>
-            [
-                'class' => 'chulakov\components\widgets\ActionColumn',
-                'template' => '{up} {down} {view} {update} {delete}',
-            ],
+                [
+                    'class' => 'chulakov\components\widgets\ActionColumn',
+                    'template' => '{up} {down} {view} {update} {delete}',
+                ],
 <?php else: ?>
-            [
-                'class' => 'chulakov\components\widgets\ActionColumn',
-            ],
+                [
+                    'class' => 'chulakov\components\widgets\ActionColumn',
+                ],
 <?php endif; ?>
-        ],
-        'layout' => '{items}',
-        'options' => [
-            'class' => 'grid-view table-responsive',
-        ],
-    ]);
-    $grid::end(); ?>
+            ],
+            'layout' => '{items}',
+            'options' => [
+                'class' => 'grid-view table-responsive',
+            ],
+        ]);
+        $grid::end(); ?>
 <?= $generator->enablePjax ? "    <?php Pjax::end(); ?>\n" : ''; ?>
-    <div class="footer">
-        <div class="row">
-            <div class="col-md-6">
-                <a class="btn btn-success" href="<?= "<?="; ?> Url::to(['create']); ?>">
-                    <i class="fa fa-plus"></i> <?= "<?="; ?> Yii::t('ch/all', 'Create'); ?>
-                </a>
-            </div>
-            <div class="col-md-6 text-right">
-                <?= "<?="; ?> PageSizeWidget::widget([
-                    'defaultPageSize' => $grid->dataProvider->getPagination()->defaultPageSize
-                ]); ?>
-                <?= "<?="; ?> $grid->renderPager(); ?>
-            </div>
+
+        <a class="btn btn-success" href="<?= "<?="; ?> Url::to(['create']); ?>">
+            <i class="fa fa-plus"></i> <?= "<?="; ?> Yii::t('ch/all', 'Create'); ?>
+        </a>
+        <div class="paginator">
+            <?= "<?="; ?> PageSizeWidget::widget([
+                'defaultPageSize' => $grid->dataProvider->getPagination()->defaultPageSize
+            ]); ?>
+            <?= "<?="; ?> $grid->renderPager(); ?>
         </div>
+
     </div>
+
 </div>

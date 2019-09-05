@@ -36,22 +36,36 @@ $this->params['breadcrumbs'][] = ['label' => $model-><?= $generator->getNameAttr
 ?>
 
 <?= '<?php'; ?> $form = ActiveForm::begin(); ?>
-    <div class="form">
-        <h3 class="form-title"><?= '<?='; ?> Html::encode($model-><?= $generator->getNameAttribute(); ?>); ?></h3>
+
+<div class="box box-solid">
+
+    <div class="box-header with-border">
+        <h3 class="box-title"><?= '<?='; ?> Html::encode($model-><?= $generator->getNameAttribute(); ?>); ?></h3>
+    </div>
+
+    <div class="box-body">
+
         <?= '<?='; ?> $this->render('_form', [
             'form' => $form,
             'model' => $model,
         ]); ?>
-        <div class="footer">
-            <button type="submit" class="btn btn-success">
-                <i class="fa fa-save"></i> <?= "<?="; ?> Yii::t('ch/all', 'Save'); ?>
-            </button>
-            <button type="submit" name="refresh" value="1" class="btn btn-success">
-                <i class="fa fa-save"></i> <?= "<?="; ?> Yii::t('ch/all', 'Apply'); ?>
-            </button>
-            <a class="btn btn-danger" href="<?= "<?="; ?> Url::to(['index']); ?>">
-                <i class="fa fa-ban"></i> <?= "<?="; ?> Yii::t('ch/all', 'Cancel'); ?>
-            </a>
+
+        <div class="row">
+            <div class="col-md-12">
+                <button type="submit" class="btn btn-success">
+                    <i class="fa fa-save"></i> <?= "<?="; ?> Yii::t('ch/all', 'Save'); ?>
+                </button>
+                <button type="submit" name="refresh" value="1" class="btn btn-success">
+                    <i class="fa fa-save"></i> <?= "<?="; ?> Yii::t('ch/all', 'Apply'); ?>
+                </button>
+                <a class="btn btn-danger" href="<?= "<?="; ?> Url::to(['index']); ?>">
+                    <i class="fa fa-ban"></i> <?= "<?="; ?> Yii::t('ch/all', 'Cancel'); ?>
+                </a>
+            </div>
         </div>
+
     </div>
+
+</div>
+
 <?= '<?php'; ?> ActiveForm::end(); ?>
