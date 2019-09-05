@@ -27,7 +27,7 @@ echo "<?php\n";
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use chulakov\components\widgets\BoxWidget;
+use chulakov\view\widgets\BoxWidget;
 
 $this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Update ' . strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass, false)))); ?>);
 $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(ucfirst(strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass))))); ?>), 'url' => ['index']];

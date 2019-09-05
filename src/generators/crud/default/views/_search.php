@@ -24,7 +24,7 @@ echo "<?php\n";
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use chulakov\components\widgets\BoxFilterWidget;
+use chulakov\view\widgets\BoxWidget;
 
 ?>
 

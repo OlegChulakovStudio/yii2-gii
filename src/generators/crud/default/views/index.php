@@ -29,7 +29,7 @@ echo "<?php\n";
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\grid\GridView;
-use chulakov\components\widgets\PageSizeWidget;
+use chulakov\view\widgets\PageSizeWidget;
 <?= $generator->enablePjax ? "use yii\widgets\Pjax;\n" : ''; ?>
 use <?= $generator->moduleNamespace; ?>\models\<?= $generator->modelClass; ?>;
 
