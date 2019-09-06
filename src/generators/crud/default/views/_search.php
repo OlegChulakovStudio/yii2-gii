@@ -24,7 +24,7 @@ echo "<?php\n";
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use chulakov\view\widgets\BoxWidget;
+use chulakov\view\widgets\BoxFilterWidget;
 
 ?>
 
@@ -33,7 +33,7 @@ use chulakov\view\widgets\BoxWidget;
     'method' => 'get',
 ]); ?>
     <?= "<?php" ?> BoxFilterWidget::begin([
-        'hidden' => empty($model->title)
+        'collapsed' => empty($model->title)
     ]); ?>
 <?php foreach ($properties as $attribute) : if (!in_array($attribute['name'], ['is_active', 'title', 'name'])) {continue;} ?>
         <div class="row">

@@ -53,7 +53,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID
                 [
                     'attribute' => '<?= $column->name; ?>',
                     'format' => 'raw',
-                    'value' => \chulakov\view\grid\ColorColumn::render($model, '<?= $column->name; ?>'),
+                    'value' => chulakov\view\grid\ColorColumn::render($model, '<?= $column->name; ?>'),
                 ],
 <?php continue; endif; ?>
 <?php $format = $generator->generateColumnFormat($column); ?>
@@ -66,7 +66,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID
                 [
                     'attribute' => '<?= $property['name']; ?>',
                     'format' => 'raw',
-                    'value' => \chulakov\view\grid\ImageColumn::render($model, '<?= $property['name']; ?>'),
+                    'value' => chulakov\view\grid\ImageColumn::render($model, '<?= $property['name']; ?>'),
                 ],
 <?php endif; ?>
 <?php endforeach; ?>

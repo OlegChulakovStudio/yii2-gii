@@ -71,13 +71,13 @@ $this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?=$generator->generate
 <?php continue; endif; ?>
 <?php if ($property['type'] === 'color'): ?>
                 [
-                    'class' => \chulakov\view\grid\ColorColumn::class,
+                    'class' => chulakov\view\grid\ColorColumn::class,
                     'attribute' => '<?= $property['name']; ?>',
                 ],
 <?php continue; endif; ?>
 <?php if ($property['type'] === 'Image'): ?>
                 [
-                    'class' => \chulakov\view\grid\ImageColumn::class,
+                    'class' => chulakov\view\grid\ImageColumn::class,
                     'attribute' => '<?= $property['name']; ?>',
                 ],
 <?php continue; endif; ?>
