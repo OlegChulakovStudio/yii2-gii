@@ -10,6 +10,7 @@
  */
 
 use yii\helpers\Inflector;
+use chulakov\gii\helpers\TranslationsHelper;
 
 echo "<?php\n";
 ?>
@@ -24,39 +25,44 @@ echo "<?php\n";
  */
 
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Create ' . Inflector::pluralize(Inflector::camel2words($generator->modelClass, false))); ?>);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words($generator->modelClass))); ?>), 'url' => ['index']];
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Create ' . strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass, false)))); ?>);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(TranslationsHelper::formatTitle(Inflector::pluralize(Inflector::camel2words($generator->modelClass)))); ?>), 'url' => ['index']];
+
 ?>
-<div class="box box-success">
+
+<?= '<?php'; ?> $form = ActiveForm::begin(); ?>
+
+<div class="box box-solid">
+
     <div class="box-header with-border">
-        <h3 class="box-title"><?= "<?="; ?> Yii::t('ch/<?= $generator->moduleID; ?>', '<?= Inflector::camel2words($generator->modelClass); ?> form'); ?></h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-            </button>
-        </div>
+        <h3 class="box-title"><?= '<?='; ?> Yii::t('ch/<?= $generator->moduleID; ?>', '<?= ucfirst(strtolower(Inflector::camel2words($generator->modelClass))); ?> form'); ?></h3>
     </div>
 
     <div class="box-body">
-        <?= "<?="; ?> $this->render('_form', [
+
+        <?= '<?='; ?> $this->render('_form', [
+            'form' => $form,
             'model' => $model,
         ]); ?>
-    </div>
 
-    <div class="box-footer">
         <div class="row">
             <div class="col-md-12">
                 <button type="submit" class="btn btn-success">
-                    <i class="fa fa-save"></i> <?= "<?="; ?> Yii::t('ch/all', 'Create'); ?>
+                    <i class="fa fa-save"></i> <?= '<?='; ?> Yii::t('ch/all', 'Create'); ?>
                 </button>
                 <button type="submit" name="refresh" value="1" class="btn btn-success">
-                    <i class="fa fa-save"></i> <?= "<?="; ?> Yii::t('ch/all', 'Create and continue'); ?>
+                    <i class="fa fa-save"></i> <?= '<?='; ?> Yii::t('ch/all', 'Create and continue'); ?>
                 </button>
-                <a class="btn btn-danger" href="<?= "<?="; ?> Url::to(['index']); ?>">
-                    <i class="fa fa-ban"></i> <?= "<?="; ?> Yii::t('ch/all', 'Cancel'); ?>
+                <a class="btn btn-danger" href="<?= '<?='; ?> Url::to(['index']); ?>">
+                    <i class="fa fa-ban"></i> <?= '<?='; ?>Yii::t('ch/all', 'Cancel'); ?>
                 </a>
             </div>
         </div>
+
     </div>
+
 </div>
+
+<?= '<?php'; ?> ActiveForm::end(); ?>

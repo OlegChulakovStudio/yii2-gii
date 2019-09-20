@@ -10,6 +10,7 @@
  */
 
 use yii\helpers\Inflector;
+use yii\widgets\ActiveForm;
 
 echo "<?php\n";
 ?>
@@ -25,28 +26,30 @@ echo "<?php\n";
 
 use yii\helpers\Url;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use chulakov\view\widgets\BoxWidget;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Update ' . Inflector::pluralize(Inflector::camel2words($generator->modelClass, false))); ?>);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words($generator->modelClass))); ?>), 'url' => ['index']];
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Update ' . strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass, false)))); ?>);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(ucfirst(strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass))))); ?>), 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model-><?= $generator->getNameAttribute(); ?>, 'url' => ['view', <?= $generator->generateUrlParams(); ?>]];
+
 ?>
-<div class="box box-success">
+
+<?= '<?php'; ?> $form = ActiveForm::begin(); ?>
+
+<div class="box box-solid">
+
     <div class="box-header with-border">
-        <h3 class="box-title"><?= "<?="; ?> Html::encode($model-><?= $generator->getNameAttribute(); ?>); ?></h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-            </button>
-        </div>
+        <h3 class="box-title"><?= '<?='; ?> Html::encode($model-><?= $generator->getNameAttribute(); ?>); ?></h3>
     </div>
 
     <div class="box-body">
-        <?= "<?="; ?> $this->render('_form', [
+
+        <?= '<?='; ?> $this->render('_form', [
+            'form' => $form,
             'model' => $model,
         ]); ?>
-    </div>
 
-    <div class="box-footer">
         <div class="row">
             <div class="col-md-12">
                 <button type="submit" class="btn btn-success">
@@ -60,5 +63,9 @@ $this->params['breadcrumbs'][] = ['label' => $model-><?= $generator->getNameAttr
                 </a>
             </div>
         </div>
+
     </div>
+
 </div>
+
+<?= '<?php'; ?> ActiveForm::end(); ?>

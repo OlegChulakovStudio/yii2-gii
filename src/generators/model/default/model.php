@@ -21,7 +21,9 @@ echo ModuleHelper::copyright('Файл модели ' . $className);
 namespace <?= $generator->moduleNamespace; ?>\models;
 
 use Yii;
+<?= ($generator->imageProperties) ? "use yii\db\ActiveQuery;\n" : ''; ?>
 <?= !empty($relations) ? "use yii\db\ActiveQuery;\n" : ''; ?>
+<?= ($generator->imageProperties) ? 'use chulakov\filestorage\models\Image;' . "\n" : ''; ?>
 <?php foreach ($behaviors as $behavior) : ?>
 use <?= $behavior['namespace']; ?>\<?= $behavior['class']; ?>;
 <?php endforeach; ?>
@@ -44,6 +46,15 @@ use <?= $generator->moduleNamespace; ?>\models\mappers\<?= $mapperClassName; ?>;
  */
 class <?= $className; ?> extends ActiveRecord
 {
+<?php if ($generator->imageProperties): ?>
+    const IMAGE_GROUP = '<?= mb_strtolower($className); ?>';
+<?php foreach ($properties as $property): ?>
+<?php if ($property['type'] == 'Image'): ?>
+    const IMAGE_GROUP_<?= mb_strtoupper($property['name']); ?> = '<?= mb_strtolower($property['name']); ?>';
+<?php endif; ?>
+<?php endforeach;?>
+
+<?php endif; ?>
     /**
      * @inheritdoc
      */
@@ -70,13 +81,34 @@ class <?= $className; ?> extends ActiveRecord
     {
         return [
 <?php foreach ($behaviors as $behavior) : ?>
+<?php if (isset($behavior['options'])): ?>
+            [
+                'class' => <?= $behavior['class']; ?>::class,
+                'attributes' => <?= str_replace(["\n", "\t", ' '], '', yii\helpers\VarDumper::export($behavior['options']['attributes'])); ?>,
+            ],
+<?php else: ?>
             <?= $behavior['class']; ?>::class,
+<?php endif; ?>
 <?php endforeach; ?>
         ];
     }
 <?php endif; ?>
-<?php foreach ($relations as $name => $relation) : ?>
 
+<?php foreach ($properties as $property): ?>
+<?php if ($property['type'] == 'Image'): ?>
+    /**
+     * @return ActiveQuery
+     */
+    public function get<?=ucfirst($property['name'])?>()
+    {
+        return $this->hasOne(Image::class, ['object_id' => 'id'])
+            ->andOnCondition(['group_code' => self::IMAGE_GROUP])
+            ->andOnCondition(['object_type' => self::IMAGE_GROUP_<?= mb_strtoupper($property['name']); ?>]);
+    }
+
+<?php endif; ?>
+<?php endforeach;?>
+<?php foreach ($relations as $name => $relation) : ?>
     /**
      * @return ActiveQuery
      */
@@ -85,7 +117,7 @@ class <?= $className; ?> extends ActiveRecord
         <?= $relation[0] . "\n"; ?>
     }
 <?php endforeach; ?>
-
+<?php $generator->imageProperties ? PHP_EOL : ''; ?>
     /**
      * @return <?= $queryClassName . "\n"; ?>
      */

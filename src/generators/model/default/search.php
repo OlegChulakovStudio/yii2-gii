@@ -13,6 +13,7 @@
  */
 
 use chulakov\gii\helpers\ModuleHelper;
+use chulakov\gii\helpers\TranslationsHelper;
 
 echo ModuleHelper::copyright('Файл класса ' . $className);
 ?>
@@ -47,8 +48,8 @@ class <?= $className; ?> extends SearchForm
     public function attributeLabels()
     {
         return [
-<?php foreach ($properties as $data) : $label = empty($data['comment']) ? $generator->generateString($data['name']) : "'{$data['comment']}'"; ?>
-            <?= "'{$data['name']}' => Yii::t('ch/{$generator->moduleID}', $label),\n" ?>
+<?php foreach ($properties as $data) : $label = empty($data['comment']) ? $data['name'] : "'{$data['comment']}'"; ?>
+            '<?= $data['name']; ?>' => Yii::t('<?= TranslationsHelper::getTranslatePath($label, $generator->moduleID); ?>', '<?= TranslationsHelper::formatTitle($label);?>'),
 <?php endforeach; ?>
         ];
     }

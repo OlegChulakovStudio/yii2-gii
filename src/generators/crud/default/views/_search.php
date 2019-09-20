@@ -24,34 +24,18 @@ echo "<?php\n";
 use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use chulakov\view\widgets\BoxFilterWidget;
 
 ?>
-<div class="box box-primary">
-    <div class="box-header with-border">
-        <h3 class="box-title"><?= "<?=" ?> \Yii::t('ch/all', 'Filters'); ?></h3>
-        <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-            </button>
-        </div>
-    </div>
-    <div class="box-body">
-        <?= "<?php" ?> $form = ActiveForm::begin([
-            'action' => ['index'],
-            'method' => 'get',
-<?php if ($generator->enablePjax) : ?>
-            'options' => [
-                'data-pjax' => 1
-            ],
-<?php endif; ?>
-        ]); ?>
 
-<?php
-foreach ($properties as $attribute) :
-    if (!in_array($attribute['name'], ['is_active', 'title', 'name'])) {
-        continue;
-    }
-?>
+<?= "<?php" ?> $form = ActiveForm::begin([
+    'action' => ['index'],
+    'method' => 'get',
+]); ?>
+    <?= "<?php" ?> BoxFilterWidget::begin([
+        'collapsed' => empty($model->title)
+    ]); ?>
+<?php foreach ($properties as $attribute) : if (!in_array($attribute['name'], ['is_active', 'title', 'name'])) {continue;} ?>
         <div class="row">
             <div class="col-md-12">
                 <?= "<?=" ?> $form->field($model, '<?= $attribute['name']; ?>', [
@@ -62,17 +46,5 @@ foreach ($properties as $attribute) :
             </div>
         </div>
 <?php endforeach; ?>
-
-        <?= "<?php" ?> ActiveForm::end(); ?>
-
-    </div>
-
-    <div class="box-footer">
-        <button type="submit" class="btn btn-primary">
-            <i class="fa fa-search"></i> <?= "<?=" ?> \Yii::t('ch/all', 'Search'); ?>
-        </button>
-        <a class="btn btn-default" href="<?= "<?=" ?> Url::to(['index']); ?>">
-            <i class="fa fa-times"></i> <?= "<?=" ?> \Yii::t('ch/all', 'Reset'); ?>
-        </a>
-    </div>
-</div>
+    <?= "<?php" ?> BoxFilterWidget::end(); ?>
+<?= "<?php" ?> ActiveForm::end(); ?>
