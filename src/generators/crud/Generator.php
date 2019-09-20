@@ -376,13 +376,13 @@ class Generator extends \yii\gii\generators\crud\Generator
     /**
      * Generate image properties.
      *
-     * @return array|null
+     * @return array
      */
     protected function imageProperties()
     {
         return $this->imageProperties 
             ? array_filter(explode(',', $this->imageProperties)) 
-            : null;
+            : [];
     }
 
     /**

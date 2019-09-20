@@ -53,8 +53,8 @@ class <?= $className; ?> extends Form
     public $<?= "{$data['name']}"; ?>;
 <?php endif; ?>
 <?php endforeach; ?>
-
 <?php if ($generator->imageProperties): ?>
+
     /**
      * @var <?=$modelClassName . "\n"; ?>
      */

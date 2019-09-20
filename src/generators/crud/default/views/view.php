@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID
         <h3 class="box-title"><?= "<?="; ?> Html::encode($model-><?= $generator->getNameAttribute() ?>); ?></h3>
         <div class="box-tools pull-right">
             <a class="btn" href="<?= "<?="; ?> Url::to(['update', 'id' => $model->id]); ?>">
-                <i class="fa fa-pen" title="<?= Yii::t('yii', 'Update'); ?>"></i>
+                <i class="fa fa-pen" title="<?= "<?="; ?> Yii::t('yii', 'Update'); ?>"></i>
             </a>
             <a class="btn" href="<?= "<?="; ?> Url::to(['index']); ?>">
                 <i class="fa fa-arrow-left" title="<?= "<?="; ?> Yii::t('ch/all', 'Back'); ?>"></i>
