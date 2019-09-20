@@ -6,6 +6,7 @@
  * @var $generator chulakov\gii\generators\model\Generator
  * @var $className string class name
  * @var $modelClassName string class name
+ * @var $properties array
  * @var $fields array
  * @var $labels array
  * @var $rules array
@@ -23,11 +24,13 @@ use chulakov\base\traits\SingletonTrait;
 use chulakov\model\models\mappers\Mapper;
 <?php if ($generator->imageProperties): ?>
 use chulakov\filestorage\validators\FileValidator;
-use common\models\enums\File;
 <?php endif; ?>
 use chulakov\model\models\mappers\types\NullType;
 use chulakov\model\models\mappers\types\ModelType;
 use <?= $generator->moduleNamespace; ?>\models\<?= $modelClassName; ?>;
+<?php if ($generator->imageProperties): ?>
+use common\models\enums\File;
+<?php endif; ?>
 
 class <?= $className; ?> extends Mapper
 {

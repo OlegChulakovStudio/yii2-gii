@@ -8,9 +8,6 @@
 
 namespace chulakov\gii\helpers;
 
-use \Yii;
-use yii\helpers\Inflector;
-
 class TranslationsHelper
 {
     /**

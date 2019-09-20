@@ -27,8 +27,8 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', 'View <?= strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass, false))); ?>');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(ucfirst(strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass))))); ?>), 'url' => ['index']];
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::titleize('View_' . $generator->modelClass)); ?>);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::titleize($generator->modelClass))); ?>), 'url' => ['index']];
 
 ?>
 
@@ -36,6 +36,14 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID
 
     <div class="box-header with-border">
         <h3 class="box-title"><?= "<?="; ?> Html::encode($model-><?= $generator->getNameAttribute() ?>); ?></h3>
+        <div class="box-tools pull-right">
+            <a class="btn" href="<?= "<?="; ?> Url::to(['update', 'id' => $model->id]); ?>">
+                <i class="fa fa-pen" title="<?= Yii::t('yii', 'Update'); ?>"></i>
+            </a>
+            <a class="btn" href="<?= "<?="; ?> Url::to(['index']); ?>">
+                <i class="fa fa-arrow-left" title="<?= "<?="; ?> Yii::t('ch/all', 'Back'); ?>"></i>
+            </a>
+        </div>
     </div>
 
     <div class="box-body">
@@ -73,13 +81,6 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID
 <?php endif; ?>
             ],
         ]); ?>
-
-        <a class="btn btn-warning" href="<?= "<?="; ?> Url::to(['update', <?= $generator->generateUrlParams(); ?>]); ?>">
-            <i class="fa fa-pencil"></i> <?= "<?="; ?> Yii::t('yii', 'Update'); ?>
-        </a>
-        <a class="btn btn-default" href="<?= "<?="; ?> Url::to(['index']); ?>">
-            <i class="fa fa-arrow-left"></i> <?= "<?="; ?> Yii::t('ch/all', 'Back'); ?>
-        </a>
 
     </div>
 </div>

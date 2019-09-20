@@ -13,7 +13,6 @@ use yii\gii\CodeFile;
 use yii\db\ActiveRecord;
 use yii\helpers\Inflector;
 use yii\base\NotSupportedException;
-use common\components\FileRemoveBehavior;
 use chulakov\gii\helpers\ModuleGeneratorTrait;
 
 /**
@@ -335,7 +334,7 @@ class Generator extends \yii\gii\generators\model\Generator
         if ($this->imageProperties) {
             $behaviors[] = [
                 'namespace' => 'chulakov\components\behaviors',
-                'class' => 'FileRemoveBehavior',
+                'class' => 'common\components\FileRemoveBehavior',
                 'options' => [
                     'attributes' => $this->imageProperties,
                 ],
@@ -612,5 +611,66 @@ class Generator extends \yii\gii\generators\model\Generator
         // TODO: datetime fields search (created_at, published_at)
 
         return [$fields, $rules, $apply, $sort];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function generateRelations()
+    {
+        if ($this->generateRelations === self::RELATIONS_NONE) {
+            return [];
+        }
+
+        $db = $this->getDbConnection();
+        $relations = [];
+        $schemaNames = $this->getSchemaNames();
+        foreach ($schemaNames as $schemaName) {
+            foreach ($db->getSchema()->getTableSchemas($schemaName) as $table) {
+                $className = $this->generateClassName($table->fullName);
+                foreach ($table->foreignKeys as $refs) {
+                    $refTable = $refs[0];
+                    $refTableSchema = $db->getTableSchema($refTable);
+                    if ($refTableSchema === null) {
+                        // Foreign key could point to non-existing table: https://github.com/yiisoft/yii2-gii/issues/34
+                        continue;
+                    }
+                    unset($refs[0]);
+                    $fks = array_keys($refs);
+                    $refClassName = $this->generateClassName($refTable);
+
+                    // Add relation for this table
+                    $link = $this->generateRelationLink(array_flip($refs));
+                    $relationName = $this->generateRelationName($relations, $table, $fks[0], false);
+                    $relations[$table->fullName][$relationName] = [
+                        "return \$this->hasOne($refClassName::class, $link);",
+                        $refClassName,
+                        false,
+                    ];
+
+                    // Add relation for the referenced table
+                    $hasMany = $this->isHasManyRelation($table, $fks);
+                    $link = $this->generateRelationLink($refs);
+                    $relationName = $this->generateRelationName($relations, $refTableSchema, $className, $hasMany);
+                    $relations[$refTableSchema->fullName][$relationName] = [
+                        "return \$this->" . ($hasMany ? 'hasMany' : 'hasOne') . "($className::class, $link);",
+                        $className,
+                        $hasMany,
+                    ];
+                }
+
+                if (($junctionFks = $this->checkJunctionTable($table)) === false) {
+                    continue;
+                }
+
+                $relations = $this->generateManyManyRelations($table, $junctionFks, $relations);
+            }
+        }
+
+        if ($this->generateRelations === self::RELATIONS_ALL_INVERSE) {
+            return $this->addInverseRelations($relations);
+        }
+
+        return $relations;
     }
 }

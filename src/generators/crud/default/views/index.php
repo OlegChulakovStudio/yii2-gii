@@ -33,24 +33,30 @@ use chulakov\view\widgets\PageSizeWidget;
 <?= $generator->enablePjax ? "use yii\widgets\Pjax;\n" : ''; ?>
 use <?= $generator->moduleNamespace; ?>\models\<?= $generator->modelClass; ?>;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?=$generator->generateString(TranslationsHelper::formatTitle(Inflector::pluralize(Inflector::camel2words($generator->modelClass))))?>);
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::titleize($generator->modelClass))); ?>);
 
 ?>
-
-<?= "<?="; ?> $this->render('_search', ['model' => $searchModel]); ?>
 
 <div class="box box-solid">
 
     <div class="box-header with-border">
         <h3 class="box-title"><?= "<?="; ?> Yii::t('ch/all', 'List'); ?></h3>
+
+        <div class="box-tools pull-right">
+            <a class="btn btn-success" href="<?= "<?="; ?> Url::to(['create']); ?>">
+                <i class="fa fa-plus" title="<?= "<?="; ?> Yii::t('ch/all', 'Create'); ?>"></i>
+            </a>
+        </div>
+
     </div>
 
     <div class="box-body">
 
 <?= $generator->enablePjax ? "    <?php Pjax::begin(); ?>\n" : ''; ?>
-        <?= "<?php"; ?> $grid = GridView::begin([
+        <?= "<?="; ?> GridView::widget([
             'dataProvider' => $dataProvider,
-            'filterSelector' => 'select[name="per-page"]',
+            'filterModel' => $searchModel,
+            'filterSelector' => 'select[name="per-page"]', // '#search-filters input'
             'columns' => [
                 ['class' => 'yii\grid\SerialColumn'],
 <?php foreach ($properties as $property) : if ($property['name'] == 'sort') { continue; } ?>
@@ -67,21 +73,32 @@ $this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?=$generator->generate
                 [
                     'attribute' => '<?= $property['name']; ?>',
                     'format' => ['date', 'php:d.m.Y H:i'],
+                    'filter' => false,
                 ],
 <?php continue; endif; ?>
 <?php if ($property['type'] === 'color'): ?>
                 [
-                    'class' => chulakov\view\grid\ColorColumn::class,
+                    'class' => 'chulakov\view\grid\ColorColumn',
                     'attribute' => '<?= $property['name']; ?>',
                 ],
 <?php continue; endif; ?>
 <?php if ($property['type'] === 'Image'): ?>
                 [
-                    'class' => chulakov\view\grid\ImageColumn::class,
+                    'class' => 'chulakov\view\grid\ImageColumn',
                     'attribute' => '<?= $property['name']; ?>',
                 ],
 <?php continue; endif; ?>
-                '<?= $property['name'] . ($property['type'] === 'text' ? "" : ":" . $property['type']); ?>',
+                [
+                    'attribute' => '<?= $property['name']; ?>',
+<?php if ($property['type'] != 'text'): ?>
+                    'format' => '<?= $property['type']; ?>',
+<?php endif; ?>
+                    'filterInputOptions' => [
+                        'id' => null,
+                        'class' => 'form-control',
+                        'placeholder' => true,
+                    ],
+                ],
 <?php endforeach; ?>
 <?php if (isset($properties['sort'])) : ?>
                 [
@@ -94,23 +111,19 @@ $this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?=$generator->generate
                 ],
 <?php endif; ?>
             ],
-            'layout' => '{items}',
             'options' => [
                 'class' => 'grid-view table-responsive',
             ],
-        ]);
-        $grid::end(); ?>
+        ]); ?>
 <?= $generator->enablePjax ? "    <?php Pjax::end(); ?>\n" : ''; ?>
 
-        <a class="btn btn-success" href="<?= "<?="; ?> Url::to(['create']); ?>">
-            <i class="fa fa-plus"></i> <?= "<?="; ?> Yii::t('ch/all', 'Create'); ?>
-        </a>
+        <?= "<?php"; ?> if ($paginator = $dataProvider->getPagination()) : ?>
         <div class="paginator">
             <?= "<?="; ?> PageSizeWidget::widget([
-                'defaultPageSize' => $grid->dataProvider->getPagination()->defaultPageSize
+                'pagination' => $paginator,
             ]); ?>
-            <?= "<?="; ?> $grid->renderPager(); ?>
         </div>
+        <?= "<?php"; ?> endif; ?>
 
     </div>
 

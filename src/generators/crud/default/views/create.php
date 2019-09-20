@@ -27,8 +27,8 @@ echo "<?php\n";
 use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString('Create ' . strtolower(Inflector::pluralize(Inflector::camel2words($generator->modelClass, false)))); ?>);
-$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(TranslationsHelper::formatTitle(Inflector::pluralize(Inflector::camel2words($generator->modelClass)))); ?>), 'url' => ['index']];
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::titleize('Create_' . $generator->modelClass)); ?>);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::titleize($generator->modelClass))); ?>), 'url' => ['index']];
 
 ?>
 
@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID
 <div class="box box-solid">
 
     <div class="box-header with-border">
-        <h3 class="box-title"><?= '<?='; ?> Yii::t('ch/<?= $generator->moduleID; ?>', '<?= ucfirst(strtolower(Inflector::camel2words($generator->modelClass))); ?> form'); ?></h3>
+        <h3 class="box-title"><?= '<?='; ?> Yii::t('ch/<?= $generator->moduleID; ?>', '<?= Inflector::titleize($generator->modelClass . '_form'); ?>'); ?></h3>
     </div>
 
     <div class="box-body">

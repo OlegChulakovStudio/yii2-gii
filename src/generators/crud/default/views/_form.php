@@ -47,7 +47,7 @@ use yii\helpers\Html;
 <?php elseif ($attribute['type'] == 'Image'): ?>
         <?= "<?=" ?> $form->field($model, '<?= $attribute['name']; ?>')->widget(FileInput::class, [
             'options' => [
-                'multiple' => false
+                'multiple' => false,
             ],
             'attachedFilesAttribute' => '<?= $attribute['name']; ?>Attached',
             'pluginOptions' => [

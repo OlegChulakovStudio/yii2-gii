@@ -5,6 +5,7 @@
  * @var $this yii\web\View
  * @var $generator chulakov\gii\generators\model\Generator
  * @var $className string class name
+ * @var $modelClassName string class name
  * @var $properties array
  */
 
@@ -16,28 +17,29 @@ namespace <?= $generator->moduleNamespace; ?>\models\forms;
 
 use chulakov\model\models\forms\Form;
 <?php if ($generator->imageProperties): ?>
-use <?= $generator->moduleNamespace; ?>\models\<?= $modelClassName; ?>;
 use chulakov\filestorage\models\Image;
-use chulakov\fileinput\behaviors\FileModelBehavior;
-use chulakov\components\behaviors\FileOwnerBehavior;
 use chulakov\filestorage\behaviors\FileUploadBehavior;
+use chulakov\filestorage\uploaders\UploadInterface;
+use chulakov\fileinput\behaviors\FileModelBehavior;
+use chulakov\fileinput\behaviors\FileOwnerBehavior;
 <?php endif; ?>
+use <?= $generator->moduleNamespace; ?>\models\<?= $modelClassName; ?>;
 
-<?php if ($generator->imageProperties): ?>
 /**
- * Класс формы модели <?= $modelClassName . "\n"; ?>
+ * Форма редактирования модели <?= $modelClassName . "\n"; ?>
+<?php if ($generator->imageProperties): ?>
  *
  * @mixin FileUploadBehavior
  * @mixin FileOwnerBehavior
  * @mixin FileModelBehavior
- */
 <?php endif; ?>
+ */
 class <?= $className; ?> extends Form
 {
 <?php foreach ($properties as $data) : ?>
-<?php if ($data['type'] == 'Image'):?>
+<?php if ($data['type'] == 'Image'): ?>
     /**
-     * @var <?= "{$data['type']}\n"; ?>
+     * @var UploadInterface; ?>
      */
     public $<?= "{$data['name']}"; ?>;
     /**
@@ -57,9 +59,7 @@ class <?= $className; ?> extends Form
      * @var <?=$modelClassName . "\n"; ?>
      */
     protected $model;
-<?php endif; ?>
 
-<?php if ($generator->imageProperties): ?>
     /**
      * @inheritdoc
      */
@@ -77,8 +77,8 @@ class <?= $className; ?> extends Form
 <?php if ($property['type'] == 'Image'): ?>
             [
                 'class' => FileUploadBehavior::class,
-                'group' => <?= $modelClassName; ?>::IMAGE_GROUP,
-                'type' => <?= $modelClassName; ?>::IMAGE_GROUP_<?= mb_strtoupper($property['name']); ?>,
+                'group' => <?= $modelClassName; ?>::UPLOAD_GROUP,
+                'type' => <?= $modelClassName; ?>::UPLOAD_TYPE_<?= mb_strtoupper($property['name']); ?>,
                 'attribute' => '<?= mb_strtolower($property['name']); ?>',
                 'skipOnEmpty' => true,
             ],
@@ -94,7 +94,7 @@ class <?= $className; ?> extends Form
     {
 <?php foreach ($properties as $property): ?>
 <?php if ($property['type'] == 'Image'): ?>
-        $this-><?= mb_strtolower($property['name']); ?>Attached = $this->model-><?= mb_strtolower($property['name']); ?>;
+        $this-><?= $property['name']; ?>Attached = $this->model-><?= $property['name']; ?>;
 <?php endif; ?>
 <?php endforeach; ?>
     }
