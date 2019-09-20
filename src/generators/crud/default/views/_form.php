@@ -10,6 +10,7 @@
  */
 
 echo "<?php\n";
+
 ?>
 /**
  * Файл шаблона формы
@@ -23,11 +24,10 @@ echo "<?php\n";
  */
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+<?php echo in_array('color', array_column($properties, 'type')) ? 'use kartik\color\ColorInput;' : ''; ?>
+<?php echo in_array('Image', array_column($properties, 'type')) ? 'use chulakov\fileinput\widgets\FileInput;' : ''; ?>
 
 ?>
-
-<?= "<?php"; ?> $form = ActiveForm::begin(); ?>
 
 <?= "<?="; ?> $form->errorSummary($model, [
     'class' => 'alert alert-error'
@@ -40,9 +40,29 @@ use yii\widgets\ActiveForm;
 ?>
 <div class="row">
     <div class="col-md-12">
+<?php if ($attribute['type'] == 'color'): ?>
+        <?= "<?=" ?> $form->field($model, '<?= $attribute['name']; ?>')->widget(ColorInput::class, [
+            'options' => ['placeholder' => \Yii::t('ch/all', 'Select color...')],
+        ]); ?>
+<?php elseif ($attribute['type'] == 'Image'): ?>
+        <?= "<?=" ?> $form->field($model, '<?= $attribute['name']; ?>')->widget(FileInput::class, [
+            'options' => [
+                'multiple' => false,
+            ],
+            'attachedFilesAttribute' => '<?= $attribute['name']; ?>Attached',
+            'pluginOptions' => [
+                'overwriteInitial' => true,
+                'showUpload' => false,
+                'showClose' => false,
+                'showRemove' => false,
+                'fileActionSettings' => [
+                    'showRemove' => false,
+                ],
+            ],
+        ]); ?>
+<?php else: ?>
         <?= "<?= " . $generator->generateActiveField($attribute['name']) . "; ?>\n"; ?>
+<?php endif; ?>
     </div>
 </div>
 <?php endforeach; ?>
-
-<?= "<?php " ?>ActiveForm::end(); ?>

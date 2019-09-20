@@ -20,7 +20,7 @@ use yii\base\Module;
 <?php if (isset($properties['sort'])) : ?>
 use sem\sortable\enums\MoveDirection;
 <?php endif; ?>
-use chulakov\components\web\Controller;
+use chulakov\web\Controller;
 use <?= $generator->moduleNamespace; ?>\bootstrap\<?= $bootstrapClassName; ?>;
 use <?= $generator->moduleNamespace; ?>\models\<?= $generator->modelClass; ?>;
 
@@ -70,13 +70,13 @@ class <?= $generator->controllerClass; ?> extends Controller
     public function actions()
     {
         return [
-            'index'  => 'chulakov\components\web\actions\IndexAction',
-            'view'   => 'chulakov\components\web\actions\ViewAction',
-            'create' => 'chulakov\components\web\actions\CreateAction',
-            'update' => 'chulakov\components\web\actions\UpdateAction',
-            'delete' => 'chulakov\components\web\actions\DeleteAction',
+            'index'  => 'chulakov\web\actions\IndexAction',
+            'view'   => 'chulakov\web\actions\ViewAction',
+            'create' => 'chulakov\web\actions\CreateAction',
+            'update' => 'chulakov\web\actions\UpdateAction',
+            'delete' => 'chulakov\web\actions\DeleteAction',
 <?php if (isset($properties['is_active'])) : ?>
-            'active' => 'chulakov\components\web\actions\ToggleActivityAction',
+            'active' => 'chulakov\web\actions\ToggleActivityAction',
 <?php endif; ?>
 <?php if (isset($properties['sort'])) : ?>
             'up'     => [

@@ -16,7 +16,7 @@ echo ModuleHelper::copyright('Файл класса ' . $className);
 ?>
 namespace <?= $generator->moduleNamespace; ?>\services;
 
-use chulakov\components\services\Service;
+use chulakov\model\services\Service;
 use <?= $generator->moduleNamespace; ?>\repositories\<?= $repositoryClassName; ?>;
 use <?= $generator->moduleNamespace; ?>\models\factories\<?= $factoryClassName; ?>;
 use <?= $generator->moduleNamespace; ?>\models\mappers\<?= $mapperClassName; ?>;

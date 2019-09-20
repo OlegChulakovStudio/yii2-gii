@@ -9,8 +9,8 @@
 namespace chulakov\gii\generators\model;
 
 use yii\db\Schema;
-use yii\db\ActiveRecord;
 use yii\gii\CodeFile;
+use yii\db\ActiveRecord;
 use yii\helpers\Inflector;
 use yii\base\NotSupportedException;
 use chulakov\gii\helpers\ModuleGeneratorTrait;
@@ -31,6 +31,7 @@ class Generator extends \yii\gii\generators\model\Generator
     public $useSchemaName = true;
     public $generateQuery = true;
     public $enableI18N = false;
+    public $imageProperties = false;
 
     /**
      * {@inheritdoc}
@@ -57,7 +58,7 @@ class Generator extends \yii\gii\generators\model\Generator
             [['template'], 'required', 'message' => 'A code template must be selected.'],
             [['template'], 'validateTemplate'],
 
-            [['db', 'tableName', 'modelClass', 'baseClass', 'moduleID', 'modulePath'], 'filter', 'filter' => 'trim'],
+            [['db', 'tableName', 'modelClass', 'baseClass', 'moduleID', 'modulePath', 'imageProperties'], 'filter', 'filter' => 'trim'],
             [['db', 'tableName', 'baseClass', 'moduleID', 'modulePath'], 'required'],
 
             [['moduleID'], 'match', 'pattern' => '/^[\w\\-]+$/', 'message' => 'Only word characters and dashes are allowed.'],
@@ -121,12 +122,15 @@ class Generator extends \yii\gii\generators\model\Generator
 
     /**
      * {@inheritdoc}
+     * @throws \Exception
      */
     public function generate()
     {
         $files = [];
         $relations = $this->generateRelations();
         $db = $this->getDbConnection();
+        $this->imageProperties = $this->imageProperties();
+
         foreach ($this->getTableNames() as $tableName) {
             // components classes :
             $modelClassName = $this->generateClassName($tableName);
@@ -171,6 +175,7 @@ class Generator extends \yii\gii\generators\model\Generator
                 $this->render('mapper.php', [
                     'className' => $mapperClassName,
                     'modelClassName' => $modelClassName,
+                    'properties' => $properties,
                     'fields' => $this->generateFillAttributes($tableSchema),
                     'labels' => $this->generateLabels($tableSchema),
                     'rules' => $this->generateRules($tableSchema),
@@ -182,6 +187,7 @@ class Generator extends \yii\gii\generators\model\Generator
                 $this->fullModulePath . '/models/forms/' . $formClassName . '.php',
                 $this->render('form.php', [
                     'className' => $formClassName,
+                    'modelClassName' => $modelClassName,
                     'properties' => $this->filtrateProperties($properties),
                 ])
             );
@@ -269,7 +275,36 @@ class Generator extends \yii\gii\generators\model\Generator
                 'comment' => $column->comment,
             ];
         }
+
+        if ($imageProperties = $this->imageProperties) {
+            /** @var array $imageProperties */
+            foreach ($imageProperties as $property) {
+                $properties[$property] = [
+                    'name' => $property,
+                    'type' => 'Image',
+                ];
+            }
+        }
+
         return $properties;
+    }
+
+    /**
+     *  Generates the image properties for the model.
+     *
+     * @return array|null
+     * @throws \Exception
+     */
+    protected function imageProperties()
+    {
+        if ($this->imageProperties) {
+            if ($imageProperties = array_filter(explode(',', $this->imageProperties))) {
+                $this->imageProperties = $imageProperties;
+                return $this->imageProperties;
+            }
+            throw new \Exception("Failed to initialize parameter: --imageProperties={$this->imageProperties}");
+        }
+        return null;
     }
 
     /**
@@ -295,6 +330,17 @@ class Generator extends \yii\gii\generators\model\Generator
                 ];
             }
         }
+
+        if ($this->imageProperties) {
+            $behaviors[] = [
+                'namespace' => 'chulakov\components\behaviors',
+                'class' => 'common\components\FileRemoveBehavior',
+                'options' => [
+                    'attributes' => $this->imageProperties,
+                ],
+            ];
+        }
+
         return $behaviors;
     }
 
@@ -309,10 +355,10 @@ class Generator extends \yii\gii\generators\model\Generator
         $traits = [];
 
         $traitsList = [
-            'id' =>        ['QueryIdTrait',     'chulakov\components\models\scopes\QueryIdTrait'],
-            'slug' =>      ['QuerySlugTrait',   'chulakov\components\models\scopes\QuerySlugTrait'],
-            'is_active' => ['QueryActiveTrait', 'chulakov\components\models\scopes\QueryActiveTrait'],
-            'sort' =>      ['QuerySortTrait',   'chulakov\components\models\scopes\QuerySortTrait'],
+            'id' =>        ['QueryIdTrait',     'chulakov\model\models\scopes\QueryIdTrait'],
+            'slug' =>      ['QuerySlugTrait',   'chulakov\model\models\scopes\QuerySlugTrait'],
+            'is_active' => ['QueryActiveTrait', 'chulakov\model\models\scopes\QueryActiveTrait'],
+            'sort' =>      ['QuerySortTrait',   'chulakov\model\models\scopes\QuerySortTrait'],
         ];
         foreach ($traitsList as $key => $item) {
             if (isset($table->columns[$key])) {
@@ -565,5 +611,66 @@ class Generator extends \yii\gii\generators\model\Generator
         // TODO: datetime fields search (created_at, published_at)
 
         return [$fields, $rules, $apply, $sort];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function generateRelations()
+    {
+        if ($this->generateRelations === self::RELATIONS_NONE) {
+            return [];
+        }
+
+        $db = $this->getDbConnection();
+        $relations = [];
+        $schemaNames = $this->getSchemaNames();
+        foreach ($schemaNames as $schemaName) {
+            foreach ($db->getSchema()->getTableSchemas($schemaName) as $table) {
+                $className = $this->generateClassName($table->fullName);
+                foreach ($table->foreignKeys as $refs) {
+                    $refTable = $refs[0];
+                    $refTableSchema = $db->getTableSchema($refTable);
+                    if ($refTableSchema === null) {
+                        // Foreign key could point to non-existing table: https://github.com/yiisoft/yii2-gii/issues/34
+                        continue;
+                    }
+                    unset($refs[0]);
+                    $fks = array_keys($refs);
+                    $refClassName = $this->generateClassName($refTable);
+
+                    // Add relation for this table
+                    $link = $this->generateRelationLink(array_flip($refs));
+                    $relationName = $this->generateRelationName($relations, $table, $fks[0], false);
+                    $relations[$table->fullName][$relationName] = [
+                        "return \$this->hasOne($refClassName::class, $link);",
+                        $refClassName,
+                        false,
+                    ];
+
+                    // Add relation for the referenced table
+                    $hasMany = $this->isHasManyRelation($table, $fks);
+                    $link = $this->generateRelationLink($refs);
+                    $relationName = $this->generateRelationName($relations, $refTableSchema, $className, $hasMany);
+                    $relations[$refTableSchema->fullName][$relationName] = [
+                        "return \$this->" . ($hasMany ? 'hasMany' : 'hasOne') . "($className::class, $link);",
+                        $className,
+                        $hasMany,
+                    ];
+                }
+
+                if (($junctionFks = $this->checkJunctionTable($table)) === false) {
+                    continue;
+                }
+
+                $relations = $this->generateManyManyRelations($table, $junctionFks, $relations);
+            }
+        }
+
+        if ($this->generateRelations === self::RELATIONS_ALL_INVERSE) {
+            return $this->addInverseRelations($relations);
+        }
+
+        return $relations;
     }
 }

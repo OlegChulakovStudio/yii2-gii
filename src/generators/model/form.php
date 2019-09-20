@@ -11,6 +11,7 @@ echo $form->field($generator, 'modelClass');
 echo $form->field($generator, 'ns');
 echo $form->field($generator, 'baseClass');
 echo $form->field($generator, 'db');
+echo $form->field($generator, 'imageProperties');
 echo $form->field($generator, 'useTablePrefix')->checkbox();
 echo $form->field($generator, 'generateRelations')->dropDownList([
     Generator::RELATIONS_NONE => 'No relations',
