@@ -14,7 +14,7 @@ echo ModuleHelper::copyright('Файл класса ' . $className);
 ?>
 namespace <?= $generator->moduleNamespace; ?>\models\scopes;
 
-use chulakov\components\models\scopes\ActiveQuery;
+use chulakov\model\models\scopes\ActiveQuery;
 <?php foreach ($queryTraits as $trait) : ?>
 use <?= $trait; ?>;
 <?php endforeach; ?>

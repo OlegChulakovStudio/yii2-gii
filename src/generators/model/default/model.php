@@ -27,7 +27,7 @@ use Yii;
 <?php foreach ($behaviors as $behavior) : ?>
 use <?= $behavior['namespace']; ?>\<?= $behavior['class']; ?>;
 <?php endforeach; ?>
-use chulakov\components\models\ActiveRecord;
+use chulakov\model\models\ActiveRecord;
 use <?= $generator->moduleNamespace; ?>\models\scopes\<?= $queryClassName; ?>;
 use <?= $generator->moduleNamespace; ?>\models\mappers\<?= $mapperClassName; ?>;
 

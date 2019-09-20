@@ -356,10 +356,10 @@ class Generator extends \yii\gii\generators\model\Generator
         $traits = [];
 
         $traitsList = [
-            'id' =>        ['QueryIdTrait',     'chulakov\components\models\scopes\QueryIdTrait'],
-            'slug' =>      ['QuerySlugTrait',   'chulakov\components\models\scopes\QuerySlugTrait'],
-            'is_active' => ['QueryActiveTrait', 'chulakov\components\models\scopes\QueryActiveTrait'],
-            'sort' =>      ['QuerySortTrait',   'chulakov\components\models\scopes\QuerySortTrait'],
+            'id' =>        ['QueryIdTrait',     'chulakov\model\models\scopes\QueryIdTrait'],
+            'slug' =>      ['QuerySlugTrait',   'chulakov\model\models\scopes\QuerySlugTrait'],
+            'is_active' => ['QueryActiveTrait', 'chulakov\model\models\scopes\QueryActiveTrait'],
+            'sort' =>      ['QuerySortTrait',   'chulakov\model\models\scopes\QuerySortTrait'],
         ];
         foreach ($traitsList as $key => $item) {
             if (isset($table->columns[$key])) {

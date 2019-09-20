@@ -19,14 +19,14 @@ echo ModuleHelper::copyright('Файл класса ' . $className);
 namespace <?= $generator->moduleNamespace; ?>\models\mappers;
 
 use Yii;
-use chulakov\components\base\SingletonTrait;
-use chulakov\components\models\mappers\Mapper;
+use chulakov\base\traits\SingletonTrait;
+use chulakov\model\models\mappers\Mapper;
 <?php if ($generator->imageProperties): ?>
 use chulakov\filestorage\validators\FileValidator;
 use common\models\enums\File;
 <?php endif; ?>
-use chulakov\components\models\mappers\types\NullType;
-use chulakov\components\models\mappers\types\ModelType;
+use chulakov\model\models\mappers\types\NullType;
+use chulakov\model\models\mappers\types\ModelType;
 use <?= $generator->moduleNamespace; ?>\models\<?= $modelClassName; ?>;
 
 class <?= $className; ?> extends Mapper

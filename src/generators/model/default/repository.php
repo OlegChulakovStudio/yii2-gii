@@ -15,7 +15,7 @@ echo ModuleHelper::copyright('Файл класса ' . $className);
 ?>
 namespace <?= $generator->moduleNamespace; ?>\repositories;
 
-use chulakov\components\repositories\Repository;
+use chulakov\model\repositories\Repository;
 use <?= $generator->moduleNamespace; ?>\models\scopes\<?= $queryClassName; ?>;
 use <?= $generator->moduleNamespace; ?>\models\<?= $modelClassName; ?>;
 

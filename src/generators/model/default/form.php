@@ -6,7 +6,6 @@
  * @var $generator chulakov\gii\generators\model\Generator
  * @var $className string class name
  * @var $properties array
- *
  */
 
 use chulakov\gii\helpers\ModuleHelper;
@@ -15,7 +14,7 @@ echo ModuleHelper::copyright('Файл класса ' . $className);
 ?>
 namespace <?= $generator->moduleNamespace; ?>\models\forms;
 
-use chulakov\components\models\forms\Form;
+use chulakov\model\models\forms\Form;
 <?php if ($generator->imageProperties): ?>
 use <?= $generator->moduleNamespace; ?>\models\<?= $modelClassName; ?>;
 use chulakov\filestorage\models\Image;

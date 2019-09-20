@@ -11,7 +11,7 @@
 
 use yii\helpers\Url;
 use yii\helpers\Inflector;
-use \chulakov\gii\helpers\TranslationsHelper;
+use chulakov\gii\helpers\TranslationsHelper;
 
 echo "<?php\n";
 ?>
@@ -56,7 +56,7 @@ $this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?=$generator->generate
 <?php foreach ($properties as $property) : if ($property['name'] == 'sort') { continue; } ?>
 <?php if ($property['name'] == 'is_active'): ?>
                 [
-                    'class' => 'chulakov\components\widgets\ToggleColumn',
+                    'class' => 'chulakov\view\grid\ToggleColumn',
                     'attribute' => '<?= $property['name']; ?>',
                     'value' => function (<?= $generator->modelClass; ?> $model) {
                         return ['active', 'id' => $model->id];
@@ -85,12 +85,12 @@ $this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?=$generator->generate
 <?php endforeach; ?>
 <?php if (isset($properties['sort'])) : ?>
                 [
-                    'class' => 'chulakov\components\widgets\ActionColumn',
+                    'class' => 'chulakov\view\grid\ActionColumn',
                     'template' => '{up} {down} {view} {update} {delete}',
                 ],
 <?php else: ?>
                 [
-                    'class' => 'chulakov\components\widgets\ActionColumn',
+                    'class' => 'chulakov\view\grid\ActionColumn',
                 ],
 <?php endif; ?>
             ],
