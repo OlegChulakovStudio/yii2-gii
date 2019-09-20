@@ -17,8 +17,8 @@ echo ModuleHelper::copyright('Файл класса ' . $className);
 ?>
 namespace <?= $generator->moduleNamespace; ?>\models\factories;
 
-use chulakov\components\exceptions\FormException;
-use chulakov\components\models\factories\FactoryInterface;
+use chulakov\model\exceptions\FormException;
+use chulakov\model\models\factories\FactoryInterface;
 use <?= $generator->moduleNamespace; ?>\models\mappers\<?= $mapperClassName; ?>;
 use <?= $generator->moduleNamespace; ?>\models\search\<?= $searchClassName; ?>;
 use <?= $generator->moduleNamespace; ?>\models\forms\<?= $formClassName; ?>;

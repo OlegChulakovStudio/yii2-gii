@@ -9,15 +9,17 @@
 
 use yii\helpers\Inflector;
 
-$upName = Inflector::pluralize(Inflector::camel2words($className));
-$downName = Inflector::pluralize(Inflector::camel2words($className, false));
+$name = Inflector::titleize($className);
+$upName = Inflector::pluralize(Inflector::titleize($className));
+$downName = Inflector::camel2words($className, false);
 
 echo "<?php\n";
 ?>
 return [
+    '<?= $name; ?>' => '<?= $className; ?>',
     '<?= $upName; ?>' => '<?= $upName; ?>',
     'Create <?= $downName; ?>' => 'Добавить <?= $downName; ?>',
     'Update <?= $downName; ?>' => 'Редактирование <?= $downName; ?>',
     'View <?= $downName; ?>' => 'Детализация <?= $downName; ?>',
-    '<?= $upName; ?> form' => '<?= $upName; ?> форма',
+    '<?= $name; ?> form' => '<?= $name; ?> форма',
 ];

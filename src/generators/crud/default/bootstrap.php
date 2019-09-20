@@ -29,10 +29,10 @@ class <?= $className; ?> implements BootstrapInterface
     public function bootstrap($app)
     {
         \Yii::$container->setDefinitions([
-            'chulakov\components\models\mappers\Mapper' => '<?= $generator->moduleNamespace; ?>\models\mappers\<?= $mapperClassName; ?>',
-            'chulakov\components\models\factories\FactoryInterface' => '<?= $generator->moduleNamespace; ?>\models\factories\<?= $factoryClassName; ?>',
-            'chulakov\components\repositories\Repository' => '<?= $generator->moduleNamespace; ?>\repositories\<?= $repositoryClassName; ?>',
-            'chulakov\components\services\Service' => '<?= $generator->moduleNamespace; ?>\services\<?= $serviceClassName; ?>',
+            'chulakov\model\models\mappers\Mapper' => '<?= $generator->moduleNamespace; ?>\models\mappers\<?= $mapperClassName; ?>',
+            'chulakov\model\models\factories\FactoryInterface' => '<?= $generator->moduleNamespace; ?>\models\factories\<?= $factoryClassName; ?>',
+            'chulakov\model\repositories\Repository' => '<?= $generator->moduleNamespace; ?>\repositories\<?= $repositoryClassName; ?>',
+            'chulakov\model\services\Service' => '<?= $generator->moduleNamespace; ?>\services\<?= $serviceClassName; ?>',
         ]);
     }
 }

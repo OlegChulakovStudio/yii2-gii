@@ -27,16 +27,22 @@ use yii\helpers\Url;
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', 'View <?= Inflector::pluralize(Inflector::camel2words($generator->modelClass, false)); ?>');
-$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::camel2words($generator->modelClass))); ?>), 'url' => ['index']];
+$this->title = Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::titleize('View_' . $generator->modelClass)); ?>);
+$this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID; ?>', <?= $generator->generateString(Inflector::pluralize(Inflector::titleize($generator->modelClass))); ?>), 'url' => ['index']];
+
 ?>
-<div class="box box-success">
+
+<div class="box box-solid">
+
     <div class="box-header with-border">
         <h3 class="box-title"><?= "<?="; ?> Html::encode($model-><?= $generator->getNameAttribute() ?>); ?></h3>
         <div class="box-tools pull-right">
-            <button type="button" class="btn btn-box-tool" data-widget="collapse">
-                <i class="fa fa-minus"></i>
-            </button>
+            <a class="btn" href="<?= "<?="; ?> Url::to(['update', 'id' => $model->id]); ?>">
+                <i class="fa fa-pen" title="<?= Yii::t('yii', 'Update'); ?>"></i>
+            </a>
+            <a class="btn" href="<?= "<?="; ?> Url::to(['index']); ?>">
+                <i class="fa fa-arrow-left" title="<?= "<?="; ?> Yii::t('ch/all', 'Back'); ?>"></i>
+            </a>
         </div>
     </div>
 
@@ -45,33 +51,36 @@ $this->params['breadcrumbs'][] = ['label' => Yii::t('ch/<?= $generator->moduleID
         <?= "<?="; ?> DetailView::widget([
             'model' => $model,
             'attributes' => [
-<?php
-if (($tableSchema = $generator->getTableSchema()) === false) {
-    foreach ($generator->getColumnNames() as $name) {
-        echo "                '" . $name . "',\n";
-    }
-} else {
-    foreach ($generator->getTableSchema()->columns as $column) {
-        $format = $generator->generateColumnFormat($column);
-        echo "                '" . $column->name . ($format === 'text' ? "" : ":" . $format) . "',\n";
-    }
-}
-?>
+<?php if (($tableSchema = $generator->getTableSchema()) === false): ?>
+<?php foreach ($generator->getColumnNames() as $name): ?>
+                '<?= $name; ?>',
+<?php endforeach; ?>
+<?php else: ?>
+<?php foreach ($generator->getTableSchema()->columns as $column): ?>
+<?php if ($generator->isColorProperty($column)): ?>
+                [
+                    'attribute' => '<?= $column->name; ?>',
+                    'format' => 'raw',
+                    'value' => chulakov\view\grid\ColorColumn::render($model, '<?= $column->name; ?>'),
+                ],
+<?php continue; endif; ?>
+<?php $format = $generator->generateColumnFormat($column); ?>
+                '<?= $column->name . ($format === 'text' ? "" : ":" . $format); ?>',
+<?php endforeach; ?>
+<?php endif; ?>
+<?php if ($properties): ?>
+<?php foreach ($properties as $property): ?>
+<?php if ($generator->isImageProperty($property)): ?>
+                [
+                    'attribute' => '<?= $property['name']; ?>',
+                    'format' => 'raw',
+                    'value' => chulakov\view\grid\ImageColumn::render($model, '<?= $property['name']; ?>'),
+                ],
+<?php endif; ?>
+<?php endforeach; ?>
+<?php endif; ?>
             ],
         ]); ?>
 
-    </div>
-
-    <div class="box-footer">
-        <div class="row">
-            <div class="col-md-12">
-                <a class="btn btn-warning" href="<?= "<?="; ?> Url::to(['update', <?= $generator->generateUrlParams(); ?>]); ?>">
-                    <i class="fa fa-pencil"></i> <?= "<?="; ?> Yii::t('yii', 'Update'); ?>
-                </a>
-                <a class="btn btn-default" href="<?= "<?="; ?> Url::to(['index']); ?>">
-                    <i class="fa fa-arrow-left"></i> <?= "<?="; ?> Yii::t('ch/all', 'Back'); ?>
-                </a>
-            </div>
-        </div>
     </div>
 </div>
