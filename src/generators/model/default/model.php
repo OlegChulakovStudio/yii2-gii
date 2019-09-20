@@ -92,9 +92,9 @@ class <?= $className; ?> extends ActiveRecord
         ];
     }
 <?php endif; ?>
-
 <?php foreach ($properties as $property): ?>
 <?php if ($property['type'] == 'Image'): ?>
+
     /**
      * @return ActiveQuery
      */
@@ -104,10 +104,10 @@ class <?= $className; ?> extends ActiveRecord
             ->andOnCondition(['group_code' => self::UPLOAD_GROUP])
             ->andOnCondition(['object_type' => self::UPLOAD_TYPE_<?= mb_strtoupper($property['name']); ?>]);
     }
-
 <?php endif; ?>
 <?php endforeach;?>
 <?php foreach ($relations as $name => $relation) : ?>
+
     /**
      * @return ActiveQuery
      */
@@ -116,6 +116,7 @@ class <?= $className; ?> extends ActiveRecord
         <?= $relation[0] . "\n"; ?>
     }
 <?php endforeach; ?>
+
     /**
      * @return <?= $queryClassName . "\n"; ?>
      */

@@ -62,8 +62,8 @@ class <?= $className; ?> extends SearchForm
         $query
             <?= implode("\n            ", array_map(function($item) { return "->andFilterWhere({$item})"; }, $apply)); ?>;
     }
-<?php endif; ?>
 
+<?php endif; ?>
     /**
      * @inheritdoc
      */

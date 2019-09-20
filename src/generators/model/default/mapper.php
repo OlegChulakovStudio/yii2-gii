@@ -62,8 +62,8 @@ class <?= $className; ?> extends Mapper
     {
         return [<?= empty($rules) ? '' : ("\n            " . implode(",\n            ", $rules) . ",\n        "); ?>];
     }
-
 <?php if ($generator->imageProperties): ?>
+
     /**
      * @inheritdoc
      */
@@ -91,8 +91,8 @@ class <?= $className; ?> extends Mapper
 <?php endforeach; ?>
         ];
     }
-
 <?php if ($generator->imageProperties): ?>
+
     /**
      * @inheritDoc
      */
