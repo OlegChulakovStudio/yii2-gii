@@ -6,16 +6,14 @@ Yii2 Gii for Components
 Установка
 ---------
 
-Для подключения компонентов в свой код необходимо добавить в _composer.json_ следующий код:
+Для подключения компонента в свой код необходимо добавить в _composer.json_ следующий код:
 ```
 "require": {
-    "chulakov/yii2-gii": "~1.0.0"
-},
-...
-"repositories": [
-    {
-        "type": "vcs",
-        "url":  "git@bitbucket.org:OlegChulakovStudio/yii2-gii.git"
-    }
-]
+    "chulakov/yii2-gii": "^1.1"
+}
+```
+Или набрать команду:
+
+```
+composer require chulakov/yii2-gii:^1.1
 ```
